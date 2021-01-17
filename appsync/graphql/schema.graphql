@@ -1,0 +1,33 @@
+type Survey {
+  id: String!
+  question: String!
+  answers: [Answer!]
+}
+type Vote {
+  id: String!
+  ts: String!
+}
+type Answer {
+  text: String!
+  count: Int!
+  votes: [Vote!]
+}
+type VoteInput {
+  surveyId: String!
+  answer: String!
+}
+type SurveyInput {
+  question: String!
+  answers: [String!]
+}
+type Mutation {
+  addVote(input: VoteInput!): Survey
+  createSurvey(input: SurveyInput!): Survey
+}
+type Query {
+  getSurveyById(id: String!): Survey
+}
+schema {
+  query: Query
+  mutation: Mutation
+}

@@ -1,0 +1,6 @@
+mkdir appsync && cd appsync && npx cdk init  sample-app --language=typescript
+
+https://docs.aws.amazon.com/cdk/api/latest/docs/aws-construct-library.html
+https://docs.aws.amazon.com/appsync/latest/devguide/resolver-context-reference.html
+
+npm i @aws-cdk/aws-dynamodb

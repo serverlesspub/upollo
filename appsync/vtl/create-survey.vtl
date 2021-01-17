@@ -1,0 +1,23 @@
+#set($id = $util.autoId())
+#set($items= [
+    {
+             "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
+             "SK": $util.dynamodb.toDynamoDBJson("SURVEY#METADATA"),
+             "question": $util.dynamodb.toDynamoDBJson($context.args.question)
+    }
+])
+#foreach($answer in ${ctx.args.answers})
+  $util.qr($items.add({
+        "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
+        "SK": $util.dynamodb.toDynamoDBJson("ANSWER#$answer"),
+        "answer": $util.dynamodb.toDynamoDBJson($answer),
+        "count": $util.dynamodb.toDynamoDBJson(0)
+  }));
+#end
+{
+    "version" : "2018-05-29",
+    "operation" : "BatchPutItem",
+    "tables" : {
+        "{{TABLE_NAME}}": $utils.toJson($items)
+    }
+}

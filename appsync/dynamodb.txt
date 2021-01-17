@@ -1,0 +1,20 @@
+===========
+
+Survey:
+  PK: Survey#id
+  SK: SURVEY.METADATA
+  question
+
+Answer:
+  PK: Survey#ID
+  SK: Answer#Text...
+  count
+  text
+
+Vote:
+  PK: Survey#ID
+  SK: Vote#ID
+  ts: ts
+  ip: ....
+  answer: ...
+
