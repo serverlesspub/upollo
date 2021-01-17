@@ -12,11 +12,11 @@ type Answer {
   count: Int!
   votes: [Vote!]
 }
-type VoteInput {
+input VoteInput {
   surveyId: String!
   answer: String!
 }
-type SurveyInput {
+input SurveyInput {
   question: String!
   answers: [String!]
 }

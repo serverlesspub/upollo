@@ -44,7 +44,7 @@ export class AppsyncStack extends cdk.Stack {
 
 		surveyDataSource.createResolver({
 			typeName: 'Mutation',
-			fieldName: 'addSurvey',
+			fieldName: 'createSurvey',
 
 			requestMappingTemplate: MappingTemplate.fromString(
 				loadAndReplace(
