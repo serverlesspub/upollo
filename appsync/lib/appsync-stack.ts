@@ -48,7 +48,7 @@ export class AppsyncStack extends cdk.Stack {
 
 			requestMappingTemplate: MappingTemplate.fromString(
 				loadAndReplace(
-					join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl'),
+					join(__dirname, '..', 'vtl', 'create-survey.vtl'),
 					{TABLE_NAME: surveyTable.tableName}
 				)),
 			responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),

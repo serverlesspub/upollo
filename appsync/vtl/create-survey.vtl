@@ -3,21 +3,22 @@
     {
              "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
              "SK": $util.dynamodb.toDynamoDBJson("SURVEY#METADATA"),
-             "question": $util.dynamodb.toDynamoDBJson($context.args.question)
+             "question": $util.dynamodb.toDynamoDBJson($context.arguments.input.question)
     }
 ])
-#foreach($answer in ${ctx.args.answers})
-  $util.qr($items.add({
-        "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
-        "SK": $util.dynamodb.toDynamoDBJson("ANSWER#$answer"),
-        "answer": $util.dynamodb.toDynamoDBJson($answer),
-        "count": $util.dynamodb.toDynamoDBJson(0)
-  }));
+#foreach($answer in ${context.arguments.input.answers})
+    #set($item = {})
+    $util.qr($item.put("PK", $util.dynamodb.toDynamoDBJson("SURVEY#$id")))
+    $util.qr($item.put("SK", $util.dynamodb.toDynamoDBJson("ANSWER#$answer")))
+    $util.qr($item.put("answer", $util.dynamodb.toDynamoDBJson($answer)))
+    $util.qr($item.put("count", $util.dynamodb.toDynamoDBJson(0)))
+    $util.qr($items.add($item))
 #end
 {
     "version" : "2018-05-29",
     "operation" : "BatchPutItem",
     "tables" : {
-        "{{TABLE_NAME}}": $utils.toJson($items)
+        "{{TABLE_NAME}}": $utils.toJson($items),
+        "consistentRead": true
     }
 }
