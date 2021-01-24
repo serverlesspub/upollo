@@ -11,7 +11,6 @@ describe('create-survey.vtl', () => {
 		expect(rendered.result).toEqual({
 			operation: 'BatchPutItem', 
 			tables: { 
-				consistentRead: true, 
 				'{{TABLE_NAME}}': [
 					{ 
 						PK: {S: expect.stringContaining('SURVEY#')}, 
@@ -25,18 +24,17 @@ describe('create-survey.vtl', () => {
 		expect(rendered.stash).toEqual({});
 	});
 	test('should render a template with answers', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {answers: ['Foo', 'Bar', 'Baz'], question: 'Ko je?'}}),
+		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {answers: ['Foo', 'Bar', 'Baz'], question: 'Who?'}}),
 			rendered = velocity.render(ctxValues, requestContext, info);
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
 			operation: 'BatchPutItem', 
 			tables: { 
-				consistentRead: true, 
 				'{{TABLE_NAME}}': [
 					{ 
 						PK: {S: expect.stringMatching(surveyUUIDRegex)}, 
 						SK: {S: 'SURVEY#METADATA'},
-						question: {S: 'Ko je?'}
+						question: {S: 'Who?'}
 					},
 					{
 						PK: {

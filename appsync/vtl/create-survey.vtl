@@ -19,7 +19,6 @@ $util.qr($items.add($item))
     "version" : "2018-05-29",
     "operation" : "BatchPutItem",
     "tables" : {
-        "{{TABLE_NAME}}": $utils.toJson($items),
-        "consistentRead": true
+        "{{TABLE_NAME}}": $utils.toJson($items)
     }
 }

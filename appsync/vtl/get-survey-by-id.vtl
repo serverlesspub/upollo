@@ -2,7 +2,7 @@
     "version" : "2017-02-28",
     "operation" : "GetItem",
     "key" : {
-        "PK" : $util.dynamodb.toDynamoDBJson("SURVEY#$context.args.id"),
+        "PK" : $util.dynamodb.toDynamoDBJson("SURVEY#$context.arguments.input.id"),
         "SK" : $util.dynamodb.toDynamoDBJson("SURVEY#METADATA")
     },
     "consistentRead" : true
