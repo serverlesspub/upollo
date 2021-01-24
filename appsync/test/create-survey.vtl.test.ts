@@ -34,7 +34,7 @@ describe('create-survey.vtl', () => {
 				consistentRead: true, 
 				'{{TABLE_NAME}}': [
 					{ 
-						PK: {S: expect.stringContaining('SURVEY#')}, 
+						PK: {S: expect.stringMatching(surveyUUIDRegex)}, 
 						SK: {S: 'SURVEY#METADATA'},
 						question: {S: 'Ko je?'}
 					},
@@ -54,7 +54,7 @@ describe('create-survey.vtl', () => {
 					},
 					{
 						PK: {
-							S: expect.stringContaining('SURVEY#'),
+							S: expect.stringMatching(surveyUUIDRegex),
 						},
 						SK: {
 							S: 'ANSWER#Bar',
@@ -68,7 +68,7 @@ describe('create-survey.vtl', () => {
 					},
 					{
 						PK: {
-							S: expect.stringContaining('SURVEY#'),
+							S: expect.stringMatching(surveyUUIDRegex),
 						},
 						SK: {
 							S: 'ANSWER#Baz',
