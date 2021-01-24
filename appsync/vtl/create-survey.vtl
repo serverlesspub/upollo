@@ -1,17 +1,18 @@
 #set($id = $util.autoId())
-#set($items= [
-    {
-             "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
-             "SK": $util.dynamodb.toDynamoDBJson("SURVEY#METADATA"),
-             "question": $util.dynamodb.toDynamoDBJson($context.arguments.input.question)
-    }
-])
+#set($items= [])
+#set($item = {
+    "PK": $util.dynamodb.toString("SURVEY#$id"),
+    "SK": $util.dynamodb.toString("SURVEY#METADATA"),
+    "question": $util.dynamodb.toString($context.arguments.input.question)
+})
+$util.qr($items.add($item))
 #foreach($answer in ${context.arguments.input.answers})
-    #set($item = {})
-    $util.qr($item.put("PK", $util.dynamodb.toDynamoDBJson("SURVEY#$id")))
-    $util.qr($item.put("SK", $util.dynamodb.toDynamoDBJson("ANSWER#$answer")))
-    $util.qr($item.put("answer", $util.dynamodb.toDynamoDBJson($answer)))
-    $util.qr($item.put("count", $util.dynamodb.toDynamoDBJson(0)))
+    #set($item = {
+        "PK": $util.dynamodb.toString("SURVEY#$id"),
+        "SK": $util.dynamodb.toString("ANSWER#$answer"),
+        "answer": $util.dynamodb.toString($answer),
+        "count": $util.dynamodb.toNumber(0) 
+    })
     $util.qr($items.add($item))
 #end
 {
