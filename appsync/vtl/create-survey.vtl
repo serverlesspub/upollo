@@ -1,9 +1,10 @@
-#set($id = $util.autoId())
+#set($id = $context.stash.id)
 #set($items= [])
 #set($item = {
     "PK": $util.dynamodb.toString("SURVEY#$id"),
     "SK": $util.dynamodb.toString("SURVEY#METADATA"),
-    "question": $util.dynamodb.toString($context.arguments.input.question)
+    "question": $util.dynamodb.toString($context.arguments.input.question),
+    "id":  $util.dynamodb.toString("$id")
 })
 $util.qr($items.add($item))
 #foreach($answer in ${context.arguments.input.answers})

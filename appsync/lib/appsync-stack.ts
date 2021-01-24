@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import {MappingTemplate, GraphqlApi, Schema, AuthorizationType} from '@aws-cdk/aws-appsync';
+import {MappingTemplate, GraphqlApi, Schema, AuthorizationType, Resolver, AppsyncFunction} from '@aws-cdk/aws-appsync';
 import {join} from 'path';
 import {readFileSync} from 'fs';
 
@@ -33,7 +33,25 @@ export class AppsyncStack extends cdk.Stack {
 					}
 				}
 			}),
-			surveyDataSource = api.addDynamoDbDataSource('surveyTableSource', surveyTable);
+			surveyDataSource = api.addDynamoDbDataSource('surveyTableSource', surveyTable),
+			createSurveyBatchPutFunction = new AppsyncFunction(this, 'createSurveyBatchPutFunction', {
+				api, 
+				dataSource: surveyDataSource,
+				name: 'createSurveyBatchPut',
+				requestMappingTemplate: MappingTemplate.fromString(
+					loadAndReplace(
+						join(__dirname, '..', 'vtl', 'create-survey.vtl'),
+						{TABLE_NAME: surveyTable.tableName}
+					)),
+				responseMappingTemplate: MappingTemplate.dynamoDbResultItem()
+			}),
+			getSurveyByIdFromStashFunction = new AppsyncFunction(this, 'getSurveyByIdFromStashFunction', {
+				api, 
+				dataSource: surveyDataSource,
+				name: 'getSurveyByIdFromStash',
+				requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl')),
+				responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+			});
 
 		surveyDataSource.createResolver({
 			typeName: 'Query',
@@ -41,19 +59,14 @@ export class AppsyncStack extends cdk.Stack {
 			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl')),
 			responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
 		});
-
-		surveyDataSource.createResolver({
+		new Resolver(this, 'createSurveyPipelineResolver', {
+			api: api,
 			typeName: 'Mutation',
 			fieldName: 'createSurvey',
-
-			requestMappingTemplate: MappingTemplate.fromString(
-				loadAndReplace(
-					join(__dirname, '..', 'vtl', 'create-survey.vtl'),
-					{TABLE_NAME: surveyTable.tableName}
-				)),
-			responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
+			pipelineConfig: [createSurveyBatchPutFunction, getSurveyByIdFromStashFunction],
+			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'create-survey-before.vtl')),
+			responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'create-survey-after.vtl'))
 		});
-
 		new cdk.CfnOutput(this, 'Api Key', { value: api.apiKey || ''});
 	}
 }

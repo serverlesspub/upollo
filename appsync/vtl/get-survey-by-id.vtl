@@ -1,9 +1,10 @@
+#set($id = $util.defaultIfNull($context.arguments.id, $context.stash.id))
 {
     "version" : "2017-02-28",
     "operation" : "GetItem",
+    "consistentRead": true,
     "key" : {
-        "PK" : $util.dynamodb.toDynamoDBJson("SURVEY#$context.arguments.input.id"),
-        "SK" : $util.dynamodb.toDynamoDBJson("SURVEY#METADATA")
-    },
-    "consistentRead" : true
+        "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
+        "SK": $util.dynamodb.toDynamoDBJson("SURVEY#METADATA")
+    }
 }

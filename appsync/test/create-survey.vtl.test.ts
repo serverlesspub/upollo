@@ -3,9 +3,8 @@ import {getVelocityRendererParams} from './helpers/get-velocity-render-params';
 import {join} from 'path';
 const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'create-survey.vtl'));
 describe('create-survey.vtl', () => {
-	const surveyUUIDRegex = /^SURVEY#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 	test('should render a template without answers', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {question: 'Who?'}}),
+		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {question: 'Who?'}}, {stash: {id: 'id-12345'}}),
 			rendered = velocity.render(ctxValues, requestContext, info);
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
@@ -13,18 +12,19 @@ describe('create-survey.vtl', () => {
 			tables: { 
 				'{{TABLE_NAME}}': [
 					{ 
-						PK: {S: expect.stringContaining('SURVEY#')}, 
+						PK: {S: 'SURVEY#id-12345'}, 
 						SK: {S: 'SURVEY#METADATA'},
-						question: {S: 'Who?'}
+						question: {S: 'Who?'},
+						id: {S: 'id-12345'}
 					}
 				]
 			}, 
 			version: '2018-05-29'
 		});
-		expect(rendered.stash).toEqual({});
+		expect(rendered.stash).toEqual({id: 'id-12345'});
 	});
 	test('should render a template with answers', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {answers: ['Foo', 'Bar', 'Baz'], question: 'Who?'}}),
+		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {answers: ['Foo', 'Bar', 'Baz'], question: 'Who?'}}, {stash: {id: 'id-12345'}}),
 			rendered = velocity.render(ctxValues, requestContext, info);
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
@@ -32,14 +32,13 @@ describe('create-survey.vtl', () => {
 			tables: { 
 				'{{TABLE_NAME}}': [
 					{ 
-						PK: {S: expect.stringMatching(surveyUUIDRegex)}, 
+						PK: {S: 'SURVEY#id-12345'}, 
 						SK: {S: 'SURVEY#METADATA'},
-						question: {S: 'Who?'}
+						question: {S: 'Who?'},
+						id: {S: 'id-12345'}
 					},
 					{
-						PK: {
-							S: expect.stringMatching(surveyUUIDRegex),
-						},
+						PK: {S: 'SURVEY#id-12345'}, 
 						SK: {
 							S: 'ANSWER#Foo',
 						},
@@ -51,9 +50,7 @@ describe('create-survey.vtl', () => {
 						},
 					},
 					{
-						PK: {
-							S: expect.stringMatching(surveyUUIDRegex),
-						},
+						PK: {S: 'SURVEY#id-12345'}, 
 						SK: {
 							S: 'ANSWER#Bar',
 						},
@@ -65,9 +62,7 @@ describe('create-survey.vtl', () => {
 						},
 					},
 					{
-						PK: {
-							S: expect.stringMatching(surveyUUIDRegex),
-						},
+						PK: {S: 'SURVEY#id-12345'}, 
 						SK: {
 							S: 'ANSWER#Baz',
 						},
@@ -82,7 +77,7 @@ describe('create-survey.vtl', () => {
 			}, 
 			version: '2018-05-29'
 		});
-		expect(rendered.stash).toEqual({});
+		expect(rendered.stash).toEqual({id: 'id-12345'});
 	});
 
 });
