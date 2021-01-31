@@ -21,7 +21,7 @@ input SurveyInput {
   answers: [String!]
 }
 type Mutation {
-  addVote(input: VoteInput!): Boolean
+  addVote(input: VoteInput!): String
   createSurvey(input: SurveyInput!): Survey
 }
 type Query {
