@@ -1,0 +1,42 @@
+#set($voteId = $util.autoId())
+#set($ts = $util.time.nowISO8601())
+#set($surveyId = $context.arguments.input.surveyId)
+{
+    "version": "2018-05-29",
+    "operation": "TransactWriteItems",
+    "transactItems": [
+       	{
+           	"table": "{{TABLE_NAME}}",
+           	"operation": "PutItem",
+           	"key": {
+               	"PK": $util.dynamodb.toDynamoDBJson("SURVEY#$surveyId"),
+                "SK": $util.dynamodb.toDynamoDBJson("VOTE#$voteId")
+            },
+            "attributeValues": {
+                "id": $util.dynamodb.toDynamoDBJson($voteId),
+                "ts": $util.dynamodb.toDynamoDBJson($ts)
+            }
+       },
+       {
+            "table": "{{TABLE_NAME}}",
+            "operation": "UpdateItem",
+            "key": {
+                "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$surveyId"),
+                "SK": $util.dynamodb.toDynamoDBJson("ANSWER#$context.arguments.input.answer")
+            },
+            "update": {
+                "expression": "SET #count = if_not_exists(#count, :zero) + :inc",
+                "expressionValues": {
+                    ":zero": $util.dynamodb.toDynamoDBJson(0),
+                    ":inc": $util.dynamodb.toDynamoDBJson(1)
+                },
+                "expressionNames": {
+                    "#count": "count"
+                }
+			},
+            "condition": {
+                "expression": "attribute_exists(PK)"
+            }
+        }
+    ]
+}
