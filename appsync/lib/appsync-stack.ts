@@ -59,6 +59,18 @@ export class AppsyncStack extends cdk.Stack {
 			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl')),
 			responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
 		});
+		surveyDataSource.createResolver({
+			typeName: 'Query',
+			fieldName: 'getAnswersBySurveyId',
+			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl')),
+			responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+		});
+		surveyDataSource.createResolver({
+			typeName: 'Survey',
+			fieldName: 'answers',
+			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl')),
+			responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+		});
 		new Resolver(this, 'createSurveyPipelineResolver', {
 			api: api,
 			typeName: 'Mutation',

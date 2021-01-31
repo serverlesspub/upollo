@@ -1,0 +1,13 @@
+#set($id = $util.defaultIfNull($context.arguments.id, $context.source.id))
+{
+    "version" : "2017-02-28",
+    "operation" : "Query",
+    "consistentRead": true,
+    "query" : {
+        "expression" : "PK = :pk AND begins_with(SK, :sk)",
+        "expressionValues" : {
+            ":pk" : $util.dynamodb.toDynamoDBJson("SURVEY#$id"),
+            ":sk" : $util.dynamodb.toDynamoDBJson("ANSWER#")
+        }
+    }
+}
