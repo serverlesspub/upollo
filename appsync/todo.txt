@@ -1,0 +1,10 @@
+- front w amplify
+  - login/signup to create survey
+  - when signed in
+      - list your surveys
+      - view vote details for your surveys (in RT)
+      - export to XLS (to demo lambda resolver)
+  - when not signed in
+      - vote on survey
+      - view results of a survey (RT)
+- better error messages on tx cancelled

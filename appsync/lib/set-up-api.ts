@@ -5,21 +5,30 @@ import {Table} from '@aws-cdk/aws-dynamodb';
 import {MappingTemplate, GraphqlApi, Schema, AuthorizationType, Resolver, AppsyncFunction} from '@aws-cdk/aws-appsync';
 
 import {loadAndReplace} from './load-and-replace';
+import { IUserPool } from '@aws-cdk/aws-cognito';
 
-export function setUpApi(stack: Stack, surveyTable: Table) : GraphqlApi {
+export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) : GraphqlApi {
 	const api = new GraphqlApi(stack, 'GraphqlApi', {
 			name: 'Survey',
 			schema: Schema.fromAsset(join(__dirname, '..', 'graphql', 'schema.graphql')),
 			authorizationConfig: {
 				defaultAuthorization: {
-					authorizationType: AuthorizationType.API_KEY,
-					apiKeyConfig: {}
-				}
+					authorizationType: AuthorizationType.USER_POOL,
+					userPoolConfig: {
+						userPool: userPool
+					}
+				},
+				additionalAuthorizationModes: [
+					{
+						authorizationType: AuthorizationType.API_KEY,
+						apiKeyConfig: {}
+					}
+				]
 			}
 		}),
 		surveyDataSource = api.addDynamoDbDataSource('surveyTableSource', surveyTable),
 		createSurveyBatchPutFunction = new AppsyncFunction(stack, 'createSurveyBatchPutFunction', {
-			api, 
+			api,
 			dataSource: surveyDataSource,
 			name: 'createSurveyBatchPut',
 			requestMappingTemplate: MappingTemplate.fromString(
@@ -30,7 +39,7 @@ export function setUpApi(stack: Stack, surveyTable: Table) : GraphqlApi {
 			responseMappingTemplate: MappingTemplate.dynamoDbResultItem()
 		}),
 		getSurveyByIdFromStashFunction = new AppsyncFunction(stack, 'getSurveyByIdFromStashFunction', {
-			api, 
+			api,
 			dataSource: surveyDataSource,
 			name: 'getSurveyByIdFromStash',
 			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl')),

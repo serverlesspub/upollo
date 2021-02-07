@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import {setUpApi} from './survey-api';
-
+import {setUpApi} from './set-up-api';
+import {setUpAuthentication} from './set-up-authentication';
 export class AppsyncStack extends cdk.Stack {
 	constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
 		super(scope, id, props);
@@ -17,8 +17,9 @@ export class AppsyncStack extends cdk.Stack {
 				billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
 				encryption: dynamodb.TableEncryption.DEFAULT
 			}),
-			api = setUpApi(this, surveyTable);
-			
-		new cdk.CfnOutput(this, 'Api Key', { value: api.apiKey || ''});
+			userPool = setUpAuthentication(this, 'https://localhost:3000/auth'),
+			api = setUpApi(this, surveyTable, userPool);
+
+		new cdk.CfnOutput(this, 'ApiKey', { value: api.apiKey || ''});
 	}
 }

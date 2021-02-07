@@ -11,26 +11,28 @@
     "cdk": "AWS_PROFILE=desole cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.85.0",
+    "@aws-cdk/assert": "1.88.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
     "amplify-appsync-simulator": "^1.25.0",
-    "aws-cdk": "^1.85.0",
+    "aws-cdk": "^1.88.0",
     "jest": "^26.4.2",
-    "ts-jest": "^26.2.0",
+    "ts-jest": "^26.5.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "^1.85.0",
-    "@aws-cdk/aws-dynamodb": "^1.85.0",
-    "@aws-cdk/aws-sns": "1.85.0",
-    "@aws-cdk/aws-sns-subscriptions": "1.85.0",
-    "@aws-cdk/aws-sqs": "1.85.0",
-    "@aws-cdk/core": "1.85.0",
+    "@aws-cdk/aws-appsync": "^1.88.0",
+    "@aws-cdk/aws-cognito": "^1.88.0",
+    "@aws-cdk/aws-dynamodb": "^1.88.0",
+    "@aws-cdk/aws-iam": "^1.88.0",
+    "@aws-cdk/aws-sns": "1.88.0",
+    "@aws-cdk/aws-sns-subscriptions": "1.88.0",
+    "@aws-cdk/aws-sqs": "1.88.0",
+    "@aws-cdk/core": "^1.88.0",
     "@types/uuid": "^8.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.13.0",
-    "@typescript-eslint/parser": "^4.13.0",
-    "eslint": "^7.18.0"
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0"
   }
 }

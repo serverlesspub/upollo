@@ -1,4 +1,6 @@
 #if ($context.error)
     $util.appendError($context.error.message, $context.error.type, null, $context.result.cancellationReasons)
+	{}
+#else
+	$util.toJson($util.str.toReplace($context.result.keys[0].SK, "VOTE#", ""))
 #end
-$util.toJson($util.str.toReplace($context.result.keys[0].SK, "VOTE#", ""))
