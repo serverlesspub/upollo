@@ -8,7 +8,8 @@ export function setUpAuthentication(stack: Stack, oauthUrl: string): IUserPool {
 			autoVerify: {email: true},
 			signInAliases: {username: true, email: true},
 			standardAttributes: {email: {required: true, mutable: true}},
-			signInCaseSensitive: false
+			signInCaseSensitive: false,
+			selfSignUpEnabled: true
 		}),
 		client = userPool.addClient('app-client-web', {
 			preventUserExistenceErrors: true,
@@ -32,9 +33,9 @@ export function setUpAuthentication(stack: Stack, oauthUrl: string): IUserPool {
 			}]
 		});
 
-	new CfnOutput(stack, 'UserPoolId', { value: userPool.userPoolId});
-	new CfnOutput(stack, 'IdentityPoolId', { value: identityPool.ref});
-	new CfnOutput(stack, 'ClientId', { value: client.userPoolClientId});
+	new CfnOutput(stack, 'COGNITO_USER_POOL_ID', { value: userPool.userPoolId});
+	new CfnOutput(stack, 'COGNITO_IDENTITY_POOL_ID', { value: identityPool.ref});
+	new CfnOutput(stack, 'COGNITO_USER_POOL_CLIENT_ID', { value: client.userPoolClientId});
 
 	return userPool;
 

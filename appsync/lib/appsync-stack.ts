@@ -20,6 +20,8 @@ export class AppsyncStack extends cdk.Stack {
 			userPool = setUpAuthentication(this, 'https://localhost:3000/auth'),
 			api = setUpApi(this, surveyTable, userPool);
 
-		new cdk.CfnOutput(this, 'ApiKey', { value: api.apiKey || ''});
+		new cdk.CfnOutput(this, 'API_KEY', { value: api.apiKey || ''});
+		new cdk.CfnOutput(this, 'GRAPHQL_ENDPOINT', { value: api.graphqlUrl || ''});
+		new cdk.CfnOutput(this, 'REGION', { value: this.region || ''});
 	}
 }

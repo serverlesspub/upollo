@@ -4,3 +4,11 @@ https://docs.aws.amazon.com/cdk/api/latest/docs/aws-construct-library.html
 https://docs.aws.amazon.com/appsync/latest/devguide/resolver-context-reference.html
 
 npm i @aws-cdk/aws-dynamodb
+
+
+Frontend
+
+npx create-react-app upollo-frontend
+mv upollo-frontend frontend
+
+npm install aws-amplify @aws-amplify/ui-react
