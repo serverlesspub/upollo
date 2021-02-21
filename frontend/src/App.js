@@ -9,6 +9,7 @@ import {
 import { Layout, Menu } from 'antd';
 import NewSurvey from './survey/new';
 import AddVote from './survey/add-vote';
+import SurveyResults from './survey/results';
 
 const { Header, Content, Footer } = Layout;
 
@@ -30,6 +31,7 @@ function App() {
       <Content style={{ padding: '0 50px' }}>
         <div className="site-layout-content">
           <Switch>
+            <Route path="/survey/:surveyId/results" children={<SurveyResults />} />
             <Route path="/survey/:surveyId" children={<AddVote />} />
             <Route path="/user/survey/new">
               <NewSurvey />

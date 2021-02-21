@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import { Button } from 'antd';
 import { API, graphqlOperation } from 'aws-amplify';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import { GetSurvey } from '../graphql/queries';
 import { AddVote } from '../graphql/mutations';
 
 function SurveyVote () {
+  const history = useHistory();
   const { surveyId } = useParams();
   const [question, setQuestion] = useState();
   const [answers, setAnswers] = useState([]);
@@ -23,9 +24,12 @@ function SurveyVote () {
   }, [surveyId])
 
   async function handleVote(answer){
-    const res = await API.graphql(graphqlOperation(AddVote, {surveyId, answer}));
-    console.log(res);
-    const {addVote} = res.data;
+    try {
+      await API.graphql(graphqlOperation(AddVote, {surveyId, answer}));
+      history.push(`/survey/${surveyId}/results`);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return (
