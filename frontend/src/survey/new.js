@@ -4,18 +4,19 @@ import { API, graphqlOperation } from 'aws-amplify';
 
 import { Form, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 
 import { CreateSurvey } from '../graphql/mutations';
 
 function NewSurvey(){
+  let history = useHistory();
   const [form] = Form.useForm();
 
   const onFinish = async values => {
-    console.log('Received values of form:', values);
     const {question, answers} = values;
     try {
       const res = await API.graphql(graphqlOperation(CreateSurvey, {question: question, answers: answers.map(a => a.answer)}));
-      console.log(res);
+      history.push(`/survey/${res.data.createSurvey.id}`);
     } catch(e) {
       console.log(e);
     }
