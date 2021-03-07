@@ -4,7 +4,7 @@ import { join } from 'path';
 const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'add-vote.vtl'));
 describe('add-vote.vtl', () => {
 	test('should render a template for updates', () => {
-		const { ctxValues, requestContext, info } = getVelocityRendererParams('', {}, { input: { answer: 'Something', surveyId: 's1234' } }),
+		const { ctxValues, requestContext, info } = getVelocityRendererParams('', {}, {}, {stash: {id: 's1234', answer: 'Something'} }),
 			rendered = velocity.render(ctxValues, requestContext, info),
 			voteUUIDRegex = /^VOTE#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
 			tsRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
@@ -51,7 +51,7 @@ describe('add-vote.vtl', () => {
 			]
 		}
 		);
-		expect(rendered.stash).toEqual({});
+		expect(rendered.stash).toEqual({id: 's1234', answer: 'Something'});
 	});
 
 });

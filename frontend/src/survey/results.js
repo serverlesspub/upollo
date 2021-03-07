@@ -32,7 +32,6 @@ function SurveyResults () {
       error: error => console.warn(error)
     });
     return () => {
-      console.log('unsub');
       subscriber.unsubscribe();
     }
   }, [surveyId])
