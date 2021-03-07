@@ -44,7 +44,19 @@ export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) 
 			name: 'getSurveyByIdFromStash',
 			requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-by-id.vtl')),
 			responseMappingTemplate: MappingTemplate.dynamoDbResultItem(),
-		});
+		}),
+		addVoteFunction = new AppsyncFunction(stack, 'addVoteFunction', {
+			api,
+			dataSource: surveyDataSource,
+			name: 'addVote',
+			requestMappingTemplate: MappingTemplate.fromString(
+				loadAndReplace(
+					join(__dirname, '..', 'vtl', 'add-vote.vtl'),
+					{TABLE_NAME: surveyTable.tableName}
+				)),
+			responseMappingTemplate: MappingTemplate.dynamoDbResultItem()
+		})
+		;
 
 	surveyDataSource.createResolver({
 		typeName: 'Query',
@@ -64,23 +76,21 @@ export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) 
 		requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl')),
 		responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
 	});
-	surveyDataSource.createResolver({
-		typeName: 'Mutation',
-		fieldName: 'addVote',
-		requestMappingTemplate: MappingTemplate.fromString(
-			loadAndReplace(
-				join(__dirname, '..', 'vtl', 'add-vote.vtl'),
-				{TABLE_NAME: surveyTable.tableName}
-			)),
-		responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'add-vote-tx-response.vtl'))
-	});
 	new Resolver(stack, 'createSurveyPipelineResolver', {
 		api: api,
 		typeName: 'Mutation',
 		fieldName: 'createSurvey',
 		pipelineConfig: [createSurveyBatchPutFunction, getSurveyByIdFromStashFunction],
 		requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'create-survey-before.vtl')),
-		responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'create-survey-after.vtl'))
+		responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-after.vtl'))
+	});
+	new Resolver(stack, 'addVotePipelineResolver', {
+		api: api,
+		typeName: 'Mutation',
+		fieldName: 'addVote',
+		pipelineConfig: [addVoteFunction, getSurveyByIdFromStashFunction],
+		requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'add-vote-before.vtl')),
+		responseMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-survey-after.vtl'))
 	});
 	return api;
 }

@@ -24,11 +24,11 @@ function App() {
             <Link to="/">Home</Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Link to="/user/survey/new">New</Link>
+            <Link to="/user/survey/new">New Survey</Link>
           </Menu.Item>
         </Menu>
       </Header>
-      <Content style={{ padding: '0 50px' }}>
+      <Content>
         <div className="site-layout-content">
           <Switch>
             <Route path="/survey/:surveyId/results" children={<SurveyResults />} />
@@ -41,23 +41,15 @@ function App() {
                 <header className="App-header">
                   <img src={logo} className="App-logo" alt="logo" />
                   <p>
-                    Happy Father's Day!
+                    Survey 
                   </p>
-                  <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Learn React
-                  </a>
                 </header>
               </div>
             </Route>
           </Switch>
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>Chobani United</Footer>
+      <Footer style={{ textAlign: 'center' }}></Footer>
     </Layout>
     </Router>
   );

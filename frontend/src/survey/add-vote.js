@@ -21,7 +21,7 @@ function SurveyVote () {
       setAnswers(getSurveyById.answers);
     }
     getSurvey();
-  }, [surveyId])
+  }, [surveyId]);
 
   async function handleVote(answer){
     try {

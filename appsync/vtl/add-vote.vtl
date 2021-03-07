@@ -1,6 +1,7 @@
 #set($voteId = $util.autoId())
 #set($ts = $util.time.nowISO8601())
-#set($surveyId = $context.arguments.input.surveyId)
+#set($surveyId = $context.stash.id)
+#set($answer = $context.stash.answer)
 {
     "version": "2018-05-29",
     "operation": "TransactWriteItems",
@@ -22,7 +23,7 @@
             "operation": "UpdateItem",
             "key": {
                 "PK": $util.dynamodb.toDynamoDBJson("SURVEY#$surveyId"),
-                "SK": $util.dynamodb.toDynamoDBJson("ANSWER#$context.arguments.input.answer")
+                "SK": $util.dynamodb.toDynamoDBJson("ANSWER#$answer")
             },
             "update": {
                 "expression": "SET #count = if_not_exists(#count, :zero) + :inc",

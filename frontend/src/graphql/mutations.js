@@ -8,6 +8,13 @@ mutation CreateSurvey ($question: String!, $answers: [String!]) {
 
 export const AddVote = `
 mutation AddVote ($surveyId: String!, $answer: String!) {
-  addVote(input: {answer: $answer, surveyId: $surveyId})
+  addVote(input: {answer: $answer, surveyId: $surveyId}){
+    id
+    answers {
+      answer
+      count
+    }
+    question
+  }
 }
 `;

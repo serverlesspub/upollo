@@ -21,14 +21,19 @@ input SurveyInput {
   answers: [String!]
 }
 type Mutation  {
-  addVote(input: VoteInput!): String @aws_api_key @aws_cognito_user_pools
+  addVote(input: VoteInput!): Survey @aws_api_key @aws_cognito_user_pools
   createSurvey(input: SurveyInput!): Survey
 }
 type Query @aws_cognito_user_pools @aws_api_key {
   getSurveyById(id: String!): Survey
   getAnswersBySurveyId(id: String!): [Answer]
 }
+type Subscription  {
+  surveyVotes(id: String): Survey
+  @aws_subscribe(mutations: ["addVote"])
+}
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }

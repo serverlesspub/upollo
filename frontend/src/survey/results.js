@@ -4,31 +4,43 @@ import { API, graphqlOperation } from 'aws-amplify';
 import { useParams } from 'react-router-dom';
 
 import { GetSurvey } from '../graphql/queries';
+import { SurveyVotes } from '../graphql/subscriptions';
 
 function SurveyResults () {
   const { surveyId } = useParams();
   const [question, setQuestion] = useState();
   const [answers, setAnswers] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState();
 
-  
+  function updateValues({answers, question}){
+    const total = answers.reduce((a, c) => a += c.count, 0);
+    setTotal(total);
+    setQuestion(question);
+    setAnswers(answers);
+  }
+
   useEffect(() => {
     async function getSurvey(){
       const res = await API.graphql(graphqlOperation(GetSurvey, {surveyId}));
-      const {getSurveyById} = res.data;
-      const currentTotal = getSurveyById.answers.reduce((a, c) => a += c.count, 0);
-      console.log(currentTotal)
-      setTotal(currentTotal);
-      setQuestion(getSurveyById.question);
-      setAnswers(getSurveyById.answers);
+      updateValues(res.data.getSurveyById);
     }
     getSurvey();
+    const subscriber = API.graphql(graphqlOperation(SurveyVotes, {id: surveyId})).subscribe({
+      next: ({value}) => {
+        updateValues(value.data.surveyVotes);
+      },
+      error: error => console.warn(error)
+    });
+    return () => {
+      console.log('unsub');
+      subscriber.unsubscribe();
+    }
   }, [surveyId])
 
   return (
     <>
       <h1>{question}</h1>
-      {answers.map(a =>(<div key={a.answer}>{a.answer}<Progress  percent={a.count*100/total} status="active"/></div>))}
+      {answers.map(a =>(<div key={a.answer}>{a.answer}<Progress percent={Number(a.count*100/total).toFixed(2)} status="active"/></div>))}
       <h3>Total Votes: <strong>{total}</strong></h3>
     </>
   );
