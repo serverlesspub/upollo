@@ -1,13 +1,13 @@
-type Survey @aws_cognito_user_pools @aws_api_key {
+type Survey @aws_cognito_user_pools @aws_api_key @aws_iam {
   id: String!
   question: String!
   answers: [Answer!]
 }
-type Vote @aws_cognito_user_pools @aws_api_key {
+type Vote @aws_cognito_user_pools @aws_api_key @aws_iam {
   id: String!
   ts: String!
 }
-type Answer @aws_cognito_user_pools @aws_api_key {
+type Answer @aws_cognito_user_pools @aws_api_key @aws_iam {
   answer: String!
   count: Int!
   votes: [Vote!]
@@ -24,7 +24,7 @@ type Mutation  {
   addVote(input: VoteInput!): Survey @aws_api_key @aws_cognito_user_pools
   createSurvey(input: SurveyInput!): Survey
 }
-type Query @aws_cognito_user_pools @aws_api_key {
+type Query @aws_cognito_user_pools @aws_api_key @aws_iam {
   getSurveyById(id: String!): Survey
   getAnswersBySurveyId(id: String!): [Answer]
 }

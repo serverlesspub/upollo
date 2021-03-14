@@ -23,5 +23,6 @@ export class AppsyncStack extends cdk.Stack {
 		new cdk.CfnOutput(this, 'API_KEY', { value: api.apiKey || ''});
 		new cdk.CfnOutput(this, 'GRAPHQL_ENDPOINT', { value: api.graphqlUrl || ''});
 		new cdk.CfnOutput(this, 'REGION', { value: this.region || ''});
+		new cdk.CfnOutput(this, 'DATABASE', { value: surveyTable.tableName || ''});
 	}
 }

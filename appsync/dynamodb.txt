@@ -1,20 +1,19 @@
 ===========
 
 Survey:
-  PK: Survey#id
-  SK: SURVEY.METADATA
+  PK: SURVEY#id
+  SK: SURVEY#METADATA
   question
 
 Answer:
-  PK: Survey#ID
-  SK: Answer#Text...
+  PK: SURVEY#ID
+  SK: ANSWER#Text...
   count
   text
 
 Vote:
-  PK: Survey#ID
+  PK: SURVEY#ID
   SK: Vote#ID
   ts: ts
   ip: ....
   answer: ...
-

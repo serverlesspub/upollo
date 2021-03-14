@@ -22,6 +22,9 @@ export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) 
 					{
 						authorizationType: AuthorizationType.API_KEY,
 						apiKeyConfig: {}
+					},
+					{
+						authorizationType: AuthorizationType.IAM
 					}
 				]
 			}
@@ -68,13 +71,13 @@ export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) 
 		typeName: 'Query',
 		fieldName: 'getAnswersBySurveyId',
 		requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl')),
-		responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+		responseMappingTemplate: MappingTemplate.fromString('$util.toJson($context.result.items)')
 	});
 	surveyDataSource.createResolver({
 		typeName: 'Survey',
 		fieldName: 'answers',
 		requestMappingTemplate: MappingTemplate.fromFile(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl')),
-		responseMappingTemplate: MappingTemplate.dynamoDbResultList(),
+		responseMappingTemplate: MappingTemplate.fromString('$util.toJson($context.result.items)')
 	});
 	new Resolver(stack, 'createSurveyPipelineResolver', {
 		api: api,
