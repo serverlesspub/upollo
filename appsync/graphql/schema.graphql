@@ -28,7 +28,7 @@ type Query @aws_cognito_user_pools @aws_api_key @aws_iam {
   getSurveyById(id: String!): Survey
   getAnswersBySurveyId(id: String!): [Answer]
 }
-type Subscription  {
+type Subscription @aws_cognito_user_pools @aws_api_key @aws_iam {
   surveyVotes(id: String): Survey
   @aws_subscribe(mutations: ["addVote"])
 }

@@ -21,11 +21,17 @@ function SurveyResults () {
 
   useEffect(() => {
     async function getSurvey(){
-      const res = await API.graphql(graphqlOperation(GetSurvey, {surveyId}));
+      const res = await API.graphql({
+        ...graphqlOperation(GetSurvey, {surveyId}),
+        authMode: 'API_KEY'
+      });
       updateValues(res.data.getSurveyById);
     }
     getSurvey();
-    const subscriber = API.graphql(graphqlOperation(SurveyVotes, {id: surveyId})).subscribe({
+    const subscriber = API.graphql({
+      ...graphqlOperation(SurveyVotes, {id: surveyId}), 
+      authMode: 'API_KEY'
+    }).subscribe({
       next: ({value}) => {
         updateValues(value.data.surveyVotes);
       },

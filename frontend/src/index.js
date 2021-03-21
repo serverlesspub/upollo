@@ -16,6 +16,7 @@ Amplify.configure({
   aws_appsync_graphqlEndpoint: process.env.REACT_APP_GRAPHQLENDPOINT,
   aws_appsync_region: process.env.REACT_APP_REGION,
   aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+  aws_appsync_apiKey: process.env.REACT_APP_APIKEY
 });
 
 ReactDOM.render(

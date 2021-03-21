@@ -15,7 +15,10 @@ function SurveyVote () {
   
   useEffect(() => {
     async function getSurvey(){
-      const res = await API.graphql(graphqlOperation(GetSurvey, {surveyId}));
+      const res = await API.graphql({
+        ...graphqlOperation(GetSurvey, {surveyId}),
+        authMode: 'API_KEY'
+      });
       const {getSurveyById} = res.data;
       setQuestion(getSurveyById.question);
       setAnswers(getSurveyById.answers);
@@ -25,7 +28,10 @@ function SurveyVote () {
 
   async function handleVote(answer){
     try {
-      await API.graphql(graphqlOperation(AddVote, {surveyId, answer}));
+      await API.graphql({
+        ...graphqlOperation(AddVote, {surveyId, answer}), 
+        authMode: 'API_KEY'
+      });
       history.push(`/survey/${surveyId}/results`);
     } catch (e) {
       console.log(e);
