@@ -1,6 +1,6 @@
 import {join} from 'path';
 
-import {Stack} from '@aws-cdk/core';
+import {Stack, Expiration, Duration} from '@aws-cdk/core';
 import {Table} from '@aws-cdk/aws-dynamodb';
 import {MappingTemplate, GraphqlApi, Schema, AuthorizationType, Resolver, AppsyncFunction} from '@aws-cdk/aws-appsync';
 
@@ -21,7 +21,9 @@ export function setUpApi(stack: Stack, surveyTable: Table, userPool: IUserPool) 
 				additionalAuthorizationModes: [
 					{
 						authorizationType: AuthorizationType.API_KEY,
-						apiKeyConfig: {}
+						apiKeyConfig: {
+							expires: Expiration.after(Duration.days(365))
+						}
 					},
 					{
 						authorizationType: AuthorizationType.IAM
