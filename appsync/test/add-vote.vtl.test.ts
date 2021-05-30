@@ -1,15 +1,14 @@
-import { velocityInstance } from './helpers/vtl';
-import { getVelocityRendererParams } from './helpers/get-velocity-render-params';
 import { join } from 'path';
-const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'add-vote.vtl'));
+import {VTLSimulator} from './helpers/vtl-simulator';
+const templatePath = join(__dirname, '..', 'vtl', 'add-vote.vtl');
+const velocity = new VTLSimulator(templatePath);
 describe('add-vote.vtl', () => {
 	test('should render a template for updates', () => {
-		const { ctxValues, requestContext, info } = getVelocityRendererParams('', {}, {}, {stash: {id: 's1234', answer: 'Something'} }),
-			rendered = velocity.render(ctxValues, requestContext, info),
+		const ctxValues = {stash: {id: 's1234', answer: 'Something'} },
+			rendered = velocity.render(ctxValues),
 			voteUUIDRegex = /^VOTE#[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
 			tsRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/,
 			uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
 			'version': '2018-05-29',

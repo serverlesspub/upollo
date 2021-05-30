@@ -1,11 +1,15 @@
-import {velocityInstance} from './helpers/vtl';
-import {getVelocityRendererParams} from './helpers/get-velocity-render-params';
+import {VTLSimulator} from './helpers/vtl-simulator';
 import {join} from 'path';
-const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'create-survey.vtl'));
+const templatePath = join(__dirname, '..', 'vtl', 'create-survey.vtl');
+const velocity = new VTLSimulator(templatePath);
+
 describe('create-survey.vtl', () => {
 	test('should render a template without answers', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {question: 'Who?'}}, {stash: {id: 'id-12345'}}),
-			rendered = velocity.render(ctxValues, requestContext, info);
+		const ctxValues = {
+				arguments: {input: {question: 'Who?'}}, 
+				stash: {id: 'id-12345'}
+			},
+			rendered = velocity.render(ctxValues);
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
 			operation: 'BatchPutItem', 
@@ -24,8 +28,16 @@ describe('create-survey.vtl', () => {
 		expect(rendered.stash).toEqual({id: 'id-12345'});
 	});
 	test('should render a template with answers', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {answers: ['Foo', 'Bar', 'Baz'], question: 'Who?'}}, {stash: {id: 'id-12345'}}),
-			rendered = velocity.render(ctxValues, requestContext, info);
+		const ctxValues =  {
+				arguments: {
+					input: {
+						answers: ['Foo', 'Bar', 'Baz'], 
+						question: 'Who?'
+					}, 
+				},
+				stash: {id: 'id-12345'}
+			},
+			rendered = velocity.render(ctxValues);
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
 			operation: 'BatchPutItem', 

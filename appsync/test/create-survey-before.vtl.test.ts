@@ -1,13 +1,12 @@
-import {velocityInstance} from './helpers/vtl';
-import {getVelocityRendererParams} from './helpers/get-velocity-render-params';
+import {VTLSimulator} from './helpers/vtl-simulator';
 import {join} from 'path';
-const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'create-survey-before.vtl')),
-	uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const templatePath = join(__dirname, '..', 'vtl', 'create-survey-before.vtl');
+const velocity = new VTLSimulator(templatePath);
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
 describe('create-survey-before.vtl', () => {
 	test('should stash survey id', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {input: {id: 'id-12345'}}),
-			rendered = velocity.render(ctxValues, requestContext, info);
+		const rendered = velocity.render({arguments: {input: {id: 'id-12345'}}});
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({});
 		expect(rendered.stash.id).toMatch(uuidRegex);

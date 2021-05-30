@@ -1,11 +1,13 @@
-import {velocityInstance} from './helpers/vtl';
-import {getVelocityRendererParams} from './helpers/get-velocity-render-params';
+
+import {VTLSimulator} from './helpers/vtl-simulator';
 import {join} from 'path';
-const velocity = velocityInstance(join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl'));
+const templatePath = join(__dirname, '..', 'vtl', 'get-answers-by-survey-id.vtl');
+const velocity = new VTLSimulator(templatePath);
+
 describe('get-answers-by-survey-id.vtl', () => {
 	test('should render query by argument id', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {id: 'id-12345'}),
-			rendered = velocity.render(ctxValues, requestContext, info);
+		const ctxValues =  {arguments: {id: 'id-12345'}},
+			rendered = velocity.render(ctxValues);
 
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
@@ -29,8 +31,8 @@ describe('get-answers-by-survey-id.vtl', () => {
 	});
 
 	test('should render query by source id', () => {
-		const {ctxValues, requestContext, info} = getVelocityRendererParams('', {}, {}, { source: {id: 'id-12345'}}),
-			rendered = velocity.render(ctxValues, requestContext, info);
+		const ctxValues = {source: {id: 'id-12345'}},
+			rendered = velocity.render(ctxValues);
 
 		expect(rendered.errors).toEqual([]);
 		expect(rendered.result).toEqual({
