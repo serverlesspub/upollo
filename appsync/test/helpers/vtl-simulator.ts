@@ -38,7 +38,7 @@ export class VTLSimulator {
 		this.vtl = new VelocityTemplate({content}, simulator);
 	}
 	render (templateParameters: Partial<AppSyncVTLRenderContext>): any {
-		const ctxParameters = {source: {}, arguments: { input: {}}, ...templateParameters};
+		const ctxParameters = {source: {}, arguments: {input: {}}, ...templateParameters};
 		return this.vtl.render(
 			ctxParameters,
 			defaultRequestContext, 
