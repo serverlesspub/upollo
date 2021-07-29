@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Button } from 'antd';
+import { Button, Row, Col } from 'antd';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useParams, useHistory } from 'react-router-dom';
 
@@ -40,8 +40,18 @@ function SurveyVote () {
 
   return (
     <>
-      <h1>{question}</h1>
-      {answers.map(a =>(<Button key={a.answer} onClick={() => handleVote(a.answer)}>{a.answer}</Button>))}
+      <Row gutter={[16, 24]} justify="space-around" align="top" style={{ minHeight: '500px', marginTop: '40px' }}>
+        <Col span={12}>
+          <h1>{question}</h1>
+          {answers.map(a =>(
+            <Row>
+              <Button key={a.answer} onClick={() => handleVote(a.answer)}>
+                {a.answer}
+              </Button>
+            </Row>
+            ))}
+          </Col>
+      </Row>
     </>
   );
 }

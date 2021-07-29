@@ -1,5 +1,5 @@
 import React, {useEffect, useState } from 'react';
-import { Progress } from 'antd';
+import { Progress, Row, Col } from 'antd';
 import { API, graphqlOperation } from 'aws-amplify';
 import { useParams } from 'react-router-dom';
 
@@ -43,11 +43,15 @@ function SurveyResults () {
   }, [surveyId])
 
   return (
-    <>
-      <h1>{question}</h1>
-      {answers.map(a =>(<div key={a.answer}>{a.answer}<Progress percent={Number(a.count*100/total).toFixed(2)} status="active"/></div>))}
-      <h3>Total Votes: <strong>{total}</strong></h3>
-    </>
+    <Row gutter={[16, 24]} justify="space-around" align="top" style={{ minHeight: '500px', marginTop: '40px' }}>
+      <Col span={12}>
+        <h1>{question}</h1>
+        {answers.map(a =>(
+          <Row key={a.answer}>{a.answer}<Progress percent={Number(a.count*100/total).toFixed(2)} status="active"/></Row>
+        ))}
+        <h3>Total Votes: <strong>{total}</strong></h3>
+      </Col>
+    </Row>
   );
 }
 
